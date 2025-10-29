@@ -164,7 +164,7 @@ export default function Home() {
             )}
           </div>
 
-          <div className="text-sm text-zinc-500 dark:text-zinc-600">
+          <div className="text-sm text-zinc-500 dark:text-zinc-600 flex space-y-2 flex-col">
             Backend:{" "}
             <a
               href="https://github.com/ColdByDefault/agent-packet"
@@ -173,6 +173,15 @@ export default function Home() {
               rel="noopener noreferrer"
             >
               agent-packet
+            </a>
+            Frontend:{" "}
+            <a
+              href="https://github.com/ColdByDefault/agent-packet-ui"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              agent-packet-ui
             </a>
           </div>
         </div>
