@@ -6,6 +6,8 @@ interface HealthStatus {
   status: string;
   agent_initialized: boolean;
   agent_name: string | null;
+  mcp_enabled?: boolean;
+  mcp_tools?: string[] | null;
   timestamp: number;
 }
 
@@ -21,6 +23,7 @@ export default function Home() {
 
         if (response.ok) {
           const data = await response.json();
+          console.log("Health data received:", data);
           setHealthData(data);
           setIsConnected(true);
           setError(null);
@@ -39,8 +42,8 @@ export default function Home() {
     // Check connection immediately
     checkBackendConnection();
 
-    // Check connection every 5 seconds
-    const interval = setInterval(checkBackendConnection, 5000);
+    // Check connection every 3 minutes
+    const interval = setInterval(checkBackendConnection, 180000);
 
     return () => clearInterval(interval);
   }, []);
@@ -92,6 +95,39 @@ export default function Home() {
                         {healthData.agent_name}
                       </div>
                     )}
+                    <div>
+                      <span className="font-medium">MCP Tools:</span>{" "}
+                      <span
+                        className={
+                          healthData.mcp_enabled
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-orange-600 dark:text-orange-400"
+                        }
+                      >
+                        {healthData.mcp_enabled !== undefined
+                          ? healthData.mcp_enabled
+                            ? "Enabled"
+                            : "Disabled"
+                          : "Unknown"}
+                      </span>
+                    </div>
+                    {healthData.mcp_enabled &&
+                      healthData.mcp_tools &&
+                      healthData.mcp_tools.length > 0 && (
+                        <div>
+                          <span className="font-medium">Available Tools:</span>
+                          <div className="ml-4 mt-1 flex flex-wrap gap-2">
+                            {healthData.mcp_tools.map((tool) => (
+                              <span
+                                key={tool}
+                                className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded"
+                              >
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                   </div>
                 )}
               </div>
@@ -116,6 +152,12 @@ export default function Home() {
                   To start the backend, run:
                   <code className="block mt-2 p-2 bg-zinc-100 dark:bg-zinc-900 rounded">
                     cd llm_local_agent && python api_server.py
+                  </code>
+                  <div className="mt-2 text-xs text-zinc-400">
+                    Or for a simpler server without MCP tools:
+                  </div>
+                  <code className="block mt-1 p-2 bg-zinc-100 dark:bg-zinc-900 rounded">
+                    cd llm_local_agent && python api_server_simple.py
                   </code>
                 </div>
               </div>
