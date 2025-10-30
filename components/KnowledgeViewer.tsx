@@ -324,36 +324,17 @@ export function KnowledgeViewer({ refreshTrigger }: KnowledgeViewerProps) {
                 <p>No chat history yet</p>
               </div>
             ) : (
-              <div className="space-y-2">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`p-3 rounded-lg ${
-                      msg.role === "user"
-                        ? "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
-                        : "bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-semibold uppercase text-zinc-600 dark:text-zinc-400">
-                        {msg.role}
-                      </span>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-500">
-                        {msg.timestamp.toLocaleTimeString()}
-                      </span>
-                    </div>
-                    <p className="text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">
-                      {msg.content}
-                    </p>
-                    {msg.metadata && (
-                      <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
-                        {msg.metadata.model && `Model: ${msg.metadata.model}`}
-                        {msg.metadata.tokens_used &&
-                          ` • Tokens: ${msg.metadata.tokens_used}`}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="max-h-[400px] overflow-y-auto">
+                <pre className="text-xs text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap font-mono p-4 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700">
+                  {messages
+                    .map(
+                      (msg) =>
+                        `[${msg.timestamp.toLocaleTimeString()}] ${msg.role.toUpperCase()}: ${
+                          msg.content
+                        }`
+                    )
+                    .join("\n\n")}
+                </pre>
               </div>
             )}
           </div>

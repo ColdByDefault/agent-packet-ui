@@ -176,6 +176,19 @@ export class ApiService {
   }
 
   /**
+   * Start a new conversation
+   */
+  async startNewConversation(): Promise<{
+    message: string;
+    conversation_length: number;
+    timestamp: number;
+  }> {
+    return this.fetchWithErrorHandling("/conversation/new", {
+      method: "POST",
+    });
+  }
+
+  /**
    * Get knowledge base statistics
    */
   async getKnowledgeStats(): Promise<KnowledgeStats> {

@@ -23,7 +23,20 @@ export function ChatContainer({ onMessageSent }: ChatContainerProps) {
     sendMessage,
     clearMessages,
     retryLastMessage,
+    startNewConversation,
   } = useChat({ onMessageSent });
+
+  const handleNewConversation = async () => {
+    if (
+      messages.length > 0 &&
+      !confirm(
+        "Are you sure you want to start a new conversation? This will clear the current chat history."
+      )
+    ) {
+      return;
+    }
+    await startNewConversation();
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -45,6 +58,17 @@ export function ChatContainer({ onMessageSent }: ChatContainerProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleNewConversation}
+            disabled={isLoading}
+            className="px-3 py-1.5 text-sm text-white bg-blue-600 hover:bg-blue-700 
+                     disabled:bg-zinc-300 dark:disabled:bg-zinc-700 
+                     rounded-md font-medium transition-colors 
+                     disabled:cursor-not-allowed"
+            title="Start a new conversation to test memory retention"
+          >
+            New Chat
+          </button>
           {messages.length > 0 && (
             <button
               onClick={clearMessages}

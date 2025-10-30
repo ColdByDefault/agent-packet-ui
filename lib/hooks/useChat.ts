@@ -226,6 +226,35 @@ export function useChat(options: UseChatOptions = {}) {
     }
   }, [state.messages, sendMessage]);
 
+  /**
+   * Start a new conversation
+   */
+  const startNewConversation = useCallback(async () => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      dispatch({ type: "SET_ERROR", payload: null });
+
+      await apiService.startNewConversation();
+
+      // Clear local messages
+      dispatch({ type: "CLEAR_MESSAGES" });
+
+      // Notify parent if callback provided
+      if (onMessageSent) {
+        onMessageSent();
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof ApiError
+          ? error.message
+          : "Failed to start new conversation";
+      dispatch({ type: "SET_ERROR", payload: errorMessage });
+      throw error;
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  }, [onMessageSent]);
+
   // Check connection on mount
   useEffect(() => {
     checkConnection();
@@ -256,5 +285,6 @@ export function useChat(options: UseChatOptions = {}) {
     retryLastMessage,
     addMessage,
     loadConversation,
+    startNewConversation,
   };
 }
